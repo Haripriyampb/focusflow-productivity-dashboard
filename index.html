@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="FocusFlow is a smart productivity dashboard for planning, tracking, and completing tasks."
+    />
+    <title>FocusFlow | Smart Productivity Dashboard</title>
+    <link rel="stylesheet" href="./css/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar" aria-label="Sidebar navigation">
+        <div class="brand-block">
+          <div class="brand-mark" aria-hidden="true">F</div>
+          <div>
+            <p class="brand-name">FocusFlow</p>
+            <p class="brand-tag">Smart productivity</p>
+          </div>
+        </div>
+
+        <nav class="nav" aria-label="Main navigation">
+          <ul class="nav-list" aria-label="Dashboard sections">
+            <li><a class="nav-item active" href="#overview" aria-current="page">Overview</a></li>
+            <li><a class="nav-item" href="#tasks">Tasks</a></li>
+            <li><a class="nav-item" href="#calendar">Calendar</a></li>
+          </ul>
+        </nav>
+
+        <div class="focus-card" aria-label="Goal summary">
+          <p class="focus-label">Today’s focus</p>
+          <strong>Finish priority work first</strong>
+          <small>Small wins compound into a strong day.</small>
+        </div>
+      </aside>
+
+      <div class="main-panel">
+        <header class="topbar">
+          <button
+            class="icon-button mobile-only"
+            id="menu-toggle"
+            type="button"
+            aria-label="Toggle navigation menu"
+          >
+            ☰
+          </button>
+
+          <div>
+            <p class="eyebrow">Your workflow</p>
+            <h1>Productivity Dashboard</h1>
+          </div>
+
+          <button class="primary-button" id="open-task-modal" type="button">
+            + Add task
+          </button>
+        </header>
+
+        <main class="content">
+          <section class="stats-grid" aria-label="Task statistics">
+            <article class="stat-card">
+              <p>Total tasks</p>
+              <strong id="stat-total">0</strong>
+            </article>
+            <article class="stat-card">
+              <p>Completed</p>
+              <strong id="stat-completed">0</strong>
+            </article>
+            <article class="stat-card">
+              <p>Pending</p>
+              <strong id="stat-pending">0</strong>
+            </article>
+            <article class="stat-card">
+              <p>Overdue</p>
+              <strong id="stat-overdue">0</strong>
+            </article>
+          </section>
+
+          <section class="panel progress-panel" aria-label="Progress overview">
+            <div class="progress-header">
+              <div>
+                <p class="eyebrow">Progress</p>
+                <h2>Daily completion</h2>
+              </div>
+              <strong id="progress-value">0%</strong>
+            </div>
+
+            <div class="progress-bar" aria-hidden="true">
+              <div class="progress-fill" id="progress-fill"></div>
+            </div>
+          </section>
+
+          <section class="panel" aria-label="Task filter controls">
+            <form id="filter-form" class="toolbar-form">
+              <div class="form-field search-field">
+                <label for="search-input">Search</label>
+                <input
+                  id="search-input"
+                  name="search"
+                  type="search"
+                  placeholder="Search tasks"
+                  autocomplete="off"
+                />
+              </div>
+
+              <div class="form-field compact-field">
+                <label for="status-filter">Status</label>
+                <select id="status-filter" name="status">
+                  <option value="all">All</option>
+                  <option value="pending">Pending</option>
+                  <option value="completed">Completed</option>
+                </select>
+              </div>
+
+              <div class="form-field compact-field">
+                <label for="priority-filter">Priority</label>
+                <select id="priority-filter" name="priority">
+                  <option value="all">All</option>
+                  <option value="high">High</option>
+                  <option value="medium">Medium</option>
+                  <option value="low">Low</option>
+                </select>
+              </div>
+
+              <button class="secondary-button" id="reset-filters" type="button">
+                Reset
+              </button>
+            </form>
+          </section>
+
+          <section class="panel task-panel" aria-label="Task list">
+            <div class="section-header">
+              <h2>My Tasks</h2>
+              <span class="task-count" id="task-count">0 tasks</span>
+            </div>
+
+            <div id="empty-state" class="empty-state" hidden>
+              <p>No tasks match your current filter.</p>
+              <button type="button" class="primary-button" id="empty-state-button">
+                Add your first task
+              </button>
+            </div>
+
+            <ul id="task-list" class="task-list" aria-live="polite"></ul>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <div class="modal-backdrop hidden" id="task-modal-backdrop" aria-hidden="true">
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="task-modal-title">
+        <div class="modal-header">
+          <h2 id="task-modal-title">Add task</h2>
+          <button
+            class="icon-button"
+            id="close-task-modal"
+            type="button"
+            aria-label="Close task dialog"
+          >
+            ×
+          </button>
+        </div>
+
+        <form id="task-form" novalidate>
+          <input type="hidden" id="task-id" name="taskId" />
+
+          <div class="form-field">
+            <label for="task-title">Task title</label>
+            <input id="task-title" name="title" type="text" maxlength="120" required />
+          </div>
+
+          <div class="field-row">
+            <div class="form-field compact-field">
+              <label for="task-priority">Priority</label>
+              <select id="task-priority" name="priority" required>
+                <option value="high">High</option>
+                <option value="medium" selected>Medium</option>
+                <option value="low">Low</option>
+              </select>
+            </div>
+
+            <div class="form-field compact-field">
+              <label for="task-deadline">Deadline</label>
+              <input id="task-deadline" name="deadline" type="date" required />
+            </div>
+          </div>
+
+          <div class="checkbox-row">
+            <input id="task-completed" name="completed" type="checkbox" />
+            <label for="task-completed">Mark as completed</label>
+          </div>
+
+          <p id="form-error" class="error-text" aria-live="polite"></p>
+
+          <div class="modal-actions">
+            <button class="secondary-button" id="cancel-task-modal" type="button">
+              Cancel
+            </button>
+            <button class="primary-button" type="submit">Save task</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script type="module" src="./js/app.js"></script>
+  </body>
+</html>
